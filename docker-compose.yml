@@ -1,0 +1,61 @@
+services:
+  db:
+    image: postgres:16
+    environment:
+      POSTGRES_DB: ecommerce_price_comparison
+      POSTGRES_USER: ecommerce_user
+      POSTGRES_PASSWORD: ecommerce_password
+    ports:
+      - "5432:5432"
+    volumes:
+      - db_data:/var/lib/postgresql/data
+      - ./database/init.sql:/docker-entrypoint-initdb.d/init.sql:ro
+
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "6379:6379"
+
+  scraper:
+    build:
+      context: .
+      dockerfile: ecommerce_scraper/Dockerfile
+    environment:
+      DATABASE_URL: postgresql://ecommerce_user:ecommerce_password@db:5432/ecommerce_price_comparison
+    volumes:
+      - ./ecommerce_scraper:/app/ecommerce_scraper
+      - ./output:/app/output
+    depends_on:
+      - db
+
+  processor:
+    build:
+      context: .
+      dockerfile: data-processor/Dockerfile
+    environment:
+      DATABASE_URL: postgresql://ecommerce_user:ecommerce_password@db:5432/ecommerce_price_comparison
+    volumes:
+      - ./output:/app/output
+      - ./data-processor:/app
+    depends_on:
+      - db
+
+  superset:
+    image: apache/superset:latest
+    depends_on:
+      - db
+      - redis
+    environment:
+      SUPERSET_SECRET_KEY: "this-is-not-secret-change-me"
+      SUPERSET_LOAD_EXAMPLES: "no"
+      REDIS_HOST: redis
+      REDIS_PORT: "6379"
+    ports:
+      - "8088:8088"
+    volumes:
+      - ./dashboard/superset_config.py:/app/pythonpath/superset_config.py:ro
+      - superset_home:/app/superset_home
+
+volumes:
+  db_data:
+  superset_home:
