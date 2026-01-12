@@ -155,7 +155,7 @@ docker exec superset_app superset init
 2. Click **+ DATABASE**
 3. Use this connection string:
    ```
-   postgresql+psycopg2://ecommerce_user:ecommerce_password@172.18.0.3:5432/ecommerce_price_comparison
+   postgresql+psycopg2://ecommerce_user:ecommerce_password@172.18.0.2:5432/ecommerce_price_comparison
    ```
 4. Click **Test Connection** → should succeed
 5. Click **Connect**
@@ -234,7 +234,7 @@ ORDER BY avg_price
 
 **Fix:** Use the database IP address instead of `host.docker.internal`:
 ```
-postgresql+psycopg2://ecommerce_user:ecommerce_password@172.18.0.3:5432/ecommerce_price_comparison
+postgresql+psycopg2://ecommerce_user:ecommerce_password@172.18.0.2:5432/ecommerce_price_comparison
 ```
 
 ### 4) Site protection issues (403/503 errors)
@@ -270,7 +270,7 @@ If product detail pages return 403, it's a site protection issue (WAF/bot contro
 
 **PostgreSQL Connection String:**
 ```
-postgresql+psycopg2://ecommerce_user:ecommerce_password@172.18.0.3:5432/ecommerce_price_comparison
+postgresql+psycopg2://ecommerce_user:ecommerce_password@172.18.0.2:5432/ecommerce_price_comparison
 ```
 
 **Available Tables:**
