@@ -147,6 +147,31 @@ docker exec superset_app superset init
 
 ---
 
+## 🔄 Quick Restart Guide
+
+### After Laptop Shutdown
+```bash
+# Quick restart (automated):
+python quick_restart.py
+
+# Or manual restart:
+docker compose up -d
+docker compose -f superset/docker-compose-external.yml up -d
+python fix_superset_connection.py  # If IP changed
+```
+
+### First-Time Setup
+```bash
+# Complete first-time setup:
+python first_time_setup.py
+
+# Or see RESTART_GUIDE.md for detailed steps
+```
+
+**📋 Detailed Instructions:** See [RESTART_GUIDE.md](RESTART_GUIDE.md) for complete restart and setup procedures.
+
+---
+
 ## 7) Connect Superset to Database
 
 ### Add Database Connection
